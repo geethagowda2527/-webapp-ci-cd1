@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/geethagowda2527/webapp-ci-cd.git1'
+                git 'https://github.com/geethagowda2527/webapp-ci-cd1.git'
             }
         }
         stage('Build Docker Image') {
