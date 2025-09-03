@@ -3,17 +3,19 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/geethagowda2527/webapp-ci-cd1.git'
+                git branch: 'main', 
+                    url: 'https://github.com/geethagowda2527/-webapp-ci-cd1.git',
+                    credentialsId: 'github-pat'
             }
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker-compose build'
+                sh 'docker-compose -f app/docker-compose.yml build'
             }
         }
         stage('Run Containers') {
             steps {
-                sh 'docker-compose up -d'
+                sh 'docker-compose -f app/docker-compose.yml up -d'
             }
         }
     }
