@@ -1,14 +1,18 @@
 pipeline {
     agent any
+    environment {
+        PATH = "/usr/bin:/usr/local/bin:$PATH" // make sure docker is in PATH
+    }
     stages {
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t app_webapp .'
+                sh 'docker --version'
+                sh 'docker build -t app_webapp .'
             }
         }
         stage('Run Container') {
             steps {
-                bat 'docker run -d -p 5000:3000 --name webapp app_webapp'
+                sh 'docker run -d -p 80:80 app_webapp'
             }
         }
     }
