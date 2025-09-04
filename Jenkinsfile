@@ -1,24 +1,19 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/geethagowda2527/-webapp-ci-cd1.git'
-            }
-        }
         stage('Check Docker') {
             steps {
-                bat 'docker --version'
+                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" --version'
             }
         }
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t myapp:latest .'
+                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" build -t webapp .'
             }
         }
         stage('Run Container') {
             steps {
-                bat 'docker run -d -p 8080:80 myapp:latest'
+                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" run -d -p 80:80 webapp'
             }
         }
     }
