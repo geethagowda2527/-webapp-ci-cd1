@@ -8,17 +8,17 @@ pipeline {
         }
         stage('Check Docker') {
             steps {
-                sh 'docker --version'
+                bat 'docker --version'
             }
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t myapp:latest .'
+                bat 'docker build -t myapp:latest .'
             }
         }
         stage('Run Container') {
             steps {
-                sh 'docker run -d -p 8080:8080 myapp:latest'
+                bat 'docker run -d -p 8080:80 myapp:latest'
             }
         }
     }
