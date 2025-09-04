@@ -6,6 +6,11 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/geethagowda2527/-webapp-ci-cd1.git'
             }
         }
+        stage('Check Docker') {
+            steps {
+                bat 'docker --version'
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t myapp:latest .'
