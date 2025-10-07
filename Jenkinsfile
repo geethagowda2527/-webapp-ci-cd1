@@ -2,26 +2,49 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_COMPOSE = "${WORKSPACE}/docker-compose.yml"
+        APP_NAME = "webapp-ci-cd"
+        DOCKER_COMPOSE_PATH = "/mnt/c/Users/darsh/user-data-app" // change if your path is different
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https:/geethagowda2527/github.com//webapp-ci-cd1.git'
+                // Pull code from your GitHub repo
+                git branch: 'main', url: 'https://github.com/geethagowda2527/-webapp-ci-cd1.git'
             }
         }
 
-        stage('Build & Deploy') {
+        stage('Build & Deploy Docker') {
             steps {
-                sh "docker-compose -f ${DOCKER_COMPOSE} down"
-                sh "docker-compose -f ${DOCKER_COMPOSE} up -d --build"
+                script {
+                    // Navigate to project folder containing docker-compose.yml
+                    dir("${DOCKER_COMPOSE_PATH}") {
+                        // Stop any running containers
+                        sh 'docker-compose down'
+
+                        // Build and start containers
+                        sh 'docker-compose up -d --build'
+                    }
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                script {
+                    // Optional: check running containers
+                    sh 'docker ps'
+                }
             }
         }
     }
 
     post {
-        success { echo "Deployment Successful!" }
-        failure { echo "Deployment Failed!" }
+        success {
+            echo "✅ Web App built and deployed successfully!"
+        }
+        failure {
+            echo "❌ Build or Deployment failed!"
+        }
     }
 }
