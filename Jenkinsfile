@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         APP_NAME = "webapp-ci-cd"
-        DOCKER_COMPOSE_PATH = "/mnt/c/Users/darsh/user-data-app" // change if your path is different
+        DOCKER_COMPOSE_PATH = "/mnt/c/Users/geethagowda2527/webapp-ci-cd" // change if your path is different
     }
 
     stages {
