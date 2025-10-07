@@ -1,20 +1,27 @@
 pipeline {
     agent any
+
+    environment {
+        DOCKER_COMPOSE = "${WORKSPACE}/docker-compose.yml"
+    }
+
     stages {
-        stage('Check Docker') {
+        stage('Checkout') {
             steps {
-                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" --version'
+                git branch: 'main', url: 'https:/geethagowda2527/github.com//webapp-ci-cd1.git'
             }
         }
-        stage('Build Docker Image') {
+
+        stage('Build & Deploy') {
             steps {
-                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" build -t webapp .'
+                sh "docker-compose -f ${DOCKER_COMPOSE} down"
+                sh "docker-compose -f ${DOCKER_COMPOSE} up -d --build"
             }
         }
-        stage('Run Container') {
-            steps {
-                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" run -d -p 80:80 webapp'
-            }
-        }
+    }
+
+    post {
+        success { echo "Deployment Successful!" }
+        failure { echo "Deployment Failed!" }
     }
 }
