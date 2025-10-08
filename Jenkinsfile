@@ -1,50 +1,39 @@
 pipeline {
     agent any
 
-    environment {
-        APP_NAME = "webapp-ci-cd"
-        DOCKER_COMPOSE_PATH = "/mnt/c/Users/geethagowda2527/webapp-ci-cd" // change if your path is different
-    }
-
     stages {
-        stage('Checkout') {
+        stage('Cleanup Old Containers') {
             steps {
-                // Pull code from your GitHub repo
+                sh 'docker rm -f webapp || true'
+                sh 'docker rm -f mongo || true'
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
                 git branch: 'main', url: 'https://github.com/geethagowda2527/-webapp-ci-cd1.git'
             }
         }
 
-        stage('Build & Deploy Docker') {
+        stage('Build Docker Image') {
             steps {
-                script {
-                    // Navigate to project folder containing docker-compose.yml
-                    dir("${DOCKER_COMPOSE_PATH}") {
-                        // Stop any running containers
-                        sh 'docker-compose down'
-
-                        // Build and start containers
-                        sh 'docker-compose up -d --build'
-                    }
-                }
+                sh 'docker-compose build'
             }
         }
 
-        stage('Verify Deployment') {
+        stage('Deploy Containers') {
             steps {
-                script {
-                    // Optional: check running containers
-                    sh 'docker ps'
-                }
+                sh 'docker-compose up -d'
             }
         }
     }
 
     post {
         success {
-            echo "✅ Web App built and deployed successfully!"
+            echo '✅ WebApp successfully built and deployed!'
         }
         failure {
-            echo "❌ Build or Deployment failed!"
+            echo '❌ Build failed. Check logs for errors.'
         }
     }
 }
